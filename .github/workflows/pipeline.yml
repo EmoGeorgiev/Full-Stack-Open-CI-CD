@@ -16,6 +16,7 @@ jobs:
     - uses: actions/setup-node@v6
       with:
         node-version: '24'
+
     - name: Install dependencies
       run: npm install  
 
@@ -44,3 +45,15 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@1.75.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP: patch
+
