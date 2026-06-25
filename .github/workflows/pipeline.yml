@@ -24,20 +24,21 @@ jobs:
 
     - name : Run npm test
       run: npm test
+
     - name : Run npm build
-
       run: npm run build
+
     - name: Install Playwright Browsers
-
       run: npx playwright install --with-deps
+
     - name: Run Playwright tests
-
       run: npx playwright test
+
     - name: Trigger deployment
-
+      if: ${{ github.event_name == 'push' }}
       run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
-    - uses: actions/upload-artifact@v4
 
+    - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
