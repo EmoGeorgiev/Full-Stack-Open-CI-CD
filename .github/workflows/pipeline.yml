@@ -36,7 +36,7 @@ jobs:
       run: npx playwright test
 
     - name: Trigger deployment
-      if: ${{ github.event_name == 'push' }}
+      if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
       run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
     - uses: actions/upload-artifact@v4
@@ -48,7 +48,7 @@ jobs:
 
   tag_release:
     needs: [simple_deployment_pipeline]
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
